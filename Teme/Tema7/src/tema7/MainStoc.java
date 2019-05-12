@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MainStoc implements IO {
 	List<Stoc> lista = new ArrayList<>();
-	List<Stoc> listaS = Collections.synchronizedList(lista);
+	List<Stoc> listaSincronizata = Collections.synchronizedList(lista);
 
 	public static void main(String[] args) {
 		MainStoc app = new MainStoc();
@@ -24,10 +24,22 @@ public class MainStoc implements IO {
 			app.restaurare(fisierBinar);
 			app.afisareLista();
 
-			System.out.println("\n---Actualizare lista de stocuri---\n");
+			/*System.out.println("\n---Actualizare lista de stocuri---\n");
 			app.actualizariContStoc("NIR1.csv");
 			app.actualizariContStoc("NIR2.csv");
-			app.afisareLista();
+			app.afisareLista();*/
+
+			System.out.println("\n---Actualizare cu fire de executie---\n");
+			Thread fir1 = new Thread(()->app.actualizareStocSincron("NIR1.csv"));
+			Thread fir2 = new Thread(()->app.actualizareStocSincron("NIR2.csv"));
+
+			fir1.start();
+			fir1.join();
+
+			fir2.start();
+			fir2.join();
+
+			app.afisareListaSincron();
 		}
 
 		catch(Exception ex){
@@ -115,6 +127,38 @@ public class MainStoc implements IO {
 		}
 	}
 
+	public void actualizareStocSincron(String numeFisier){
+		try(BufferedReader in = new BufferedReader(new FileReader(numeFisier))){
+			int numar_nota = Integer.parseInt(in.readLine().trim());
+
+			in.lines().forEach(linie->{
+				String[] t = linie.split(",");
+				int cod_stoc = Integer.parseInt(t[0].trim());
+				char tip_tranzactie = t[1].charAt(0);
+				double cantitate = Double.parseDouble(t[2].trim());
+
+				for(Stoc stoc : listaSincronizata){
+					synchronized (stoc){
+						if(stoc.getCod_stoc() == cod_stoc){
+							if(tip_tranzactie == 'E'){
+								stoc.setTotal_iesiri(stoc.getTotal_iesiri() + cantitate);
+							}
+
+							if(tip_tranzactie == 'I'){
+								stoc.setTotal_intrari(stoc.getTotal_intrari() + cantitate);
+							}
+						}
+					}
+
+				}
+			});
+		}
+
+		catch(Exception ex){
+			System.err.println(ex.getMessage());
+		}
+	}
+
 
 	public List<Stoc> getLista() {
 		return lista;
@@ -126,5 +170,9 @@ public class MainStoc implements IO {
 
 	public void afisareLista(){
 		lista.forEach(System.out::println);
+	}
+
+	public void afisareListaSincron(){
+		listaSincronizata.forEach(System.out::println);
 	}
 }
