@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Wed Jun 12 17:22:38 EEST 2019:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-016b-4c11-b819-0000077b6478 
+on database directory C:\Users\Peanutt\Desktop\IntelliJ\Examen\Tema11\P_02\db\seminar14 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@277050dc 
+Loaded from file:/C:/Users/Peanutt/Desktop/IntelliJ/Examen/Tema11/P_02/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=11.0.2+9-LTS
+user.dir=C:\Users\Peanutt\Desktop\IntelliJ\Examen\Tema11\P_02
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
